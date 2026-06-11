@@ -55,15 +55,17 @@ const DEFAULT_AUTH_STATE: AuthState = {
 
 export default function App() {
   const [authState, setAuthState] = useState<AuthState>(DEFAULT_AUTH_STATE);
+
   const refreshAuth = async () => {
     try {
       const user = await getCurrentUser();
 
       setAuthState({
         isSignedIn: !!user,
-        userName: user?.username ?? null,
-        userId: user?.uuid ?? null,
+        userName: user?.username || null,
+        userId: user?.uuid || null,
       });
+
       return !!user;
     } catch {
       setAuthState(DEFAULT_AUTH_STATE);
@@ -81,13 +83,13 @@ export default function App() {
   };
 
   const signOut = async () => {
-    await puterSignOut();
+    puterSignOut();
     return await refreshAuth();
   };
 
   return (
     <main className="min-h-screen bg-background text-foreground relative z-10">
-      <Outlet context={{ ...authState, refreshAuth, signIn, signOut }} />
+      <Outlet context={{ ...authState, refreshAuth, signIn, signOut }} />;
     </main>
   );
 }
